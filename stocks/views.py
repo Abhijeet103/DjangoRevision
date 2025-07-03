@@ -3,12 +3,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 # # Create your views here.
 import requests
 
-from .models import Stocks, UserInfo
+from .models import Stocks, UserInfo, UserStock
 
 webscoket_api_key = 'd1hqgb1r01qsvr2bqhc0d1hqgb1r01qsvr2bqhcg'
 #
@@ -183,3 +183,46 @@ def register(request):
         return redirect('index')
 
     return render(request, 'register.html')
+
+
+
+@login_required
+def buy(request , id) :
+    stock  = get_object_or_404(Stocks ,  id =  id)
+    user =  request.user
+    purchase_quantity = int(request.POST.get('quantity'))
+    purchase_price =   stock.curr_price
+
+    # UserStock is an exmaple of Composite Keys in DBMS (user , stock) --> candidate key
+    userStocks = UserStock.objects.filter(stock  =  stock   ,  user  =  user).first()
+    if userStocks :
+        userStocks.purchase_price = (userStocks.purchase_quantity*userStocks.purchase_price  +  purchase_price*purchase_quantity) / (purchase_quantity + userStocks.purchase_quantity)
+        userStocks.purchase_quantity =  userStocks.purchase_quantity +  purchase_quantity
+        userStocks.save()
+    else  :
+        userStock = UserStock(stock  = stock ,  user = user  ,  purchase_price =  purchase_price ,  purchase_quantity =  purchase_quantity )
+        userStock.save()
+
+
+    return redirect('index')
+
+
+
+def  sell(request , id) :
+    stock = get_object_or_404(Stocks, id=id)
+    user = request.user
+    sell_quantity = int(request.POST.get('quantity'))
+    userStock  =  UserStock.objects.filter(stock  =  stock ,  user =  user).first()
+
+    if userStock.purchase_quantity <  sell_quantity :
+        messages.error(request, "Can't sell more than you own")
+        return redirect('market')
+
+    userStock.purchase_quantity -= sell_quantity
+    userStock.save()
+    return redirect('index')
+
+
+#1)  Make a view to get all userStock for the perticular user
+# 2) make a template to display cards and pass the context from view to template
+# email notification  on registration   ,  sell and buy

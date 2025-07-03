@@ -11,6 +11,11 @@ class UserInfo(models.Model) :
     user_image =  models.ImageField()
     pancard_image =  models.ImageField()
 
+# ImageFiled in Models
+#  pip  install pillow
+#  media url in setting
+#  static url  in urls.py
+
 class Stocks(models.Model):
     ticker   =  models.CharField(max_length=10)
     name =  models.CharField(max_length=300)
@@ -19,3 +24,13 @@ class Stocks(models.Model):
 
     def __str__(self):
         return  self.name
+
+
+# Fk is many to one
+
+class  UserStock(models.Model) :
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    stock = models.ForeignKey(Stocks, on_delete=models.CASCADE)
+    purchase_price =  models.FloatField()
+    purchase_quantity  = models.IntegerField()
+
