@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -36,9 +37,13 @@ webscoket_api_key = 'd1hqgb1r01qsvr2bqhc0d1hqgb1r01qsvr2bqhcg'
 
 @login_required
 def index(request) :
-    return render(request ,  'index.html')
 
+    #Join  stock and UserStock
+    user  =  request.user
+    user_stocks = UserStock.objects.select_related('stock').filter(user =  user)
+    context  =  {'data' :  user_stocks}
 
+    return render(request ,  'index.html' , context)
 
 def getData(request) :
     nasdaq_tickers = [
@@ -180,6 +185,12 @@ def register(request):
         user_info.save()
 
         login(request, user)
+
+        send_mail(subject="Welcome to Investing.com",
+                  message=f"Welcome  {user.name} to our platfrom",
+                  from_email=None,
+                  recipient_list=[user.email], fail_silently=False)
+
         return redirect('index')
 
     return render(request, 'register.html')
@@ -203,7 +214,9 @@ def buy(request , id) :
         userStock = UserStock(stock  = stock ,  user = user  ,  purchase_price =  purchase_price ,  purchase_quantity =  purchase_quantity )
         userStock.save()
 
-
+    send_mail(subject="Buy  Option executed successfully", message=f"your purchase of stock {stock.name} is successfull",
+              from_email=None,
+              recipient_list=[user.email], fail_silently=False)
     return redirect('index')
 
 
@@ -220,8 +233,10 @@ def  sell(request , id) :
 
     userStock.purchase_quantity -= sell_quantity
     userStock.save()
+    send_mail(subject="Sell  Option executed successfully", message=f"your Sale of stock {stock.name} is successfull",
+              from_email=None,
+              recipient_list=[user.email], fail_silently=False)
     return redirect('index')
-
 
 #1)  Make a view to get all userStock for the perticular user
 # 2) make a template to display cards and pass the context from view to template
