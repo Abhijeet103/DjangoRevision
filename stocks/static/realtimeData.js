@@ -11,7 +11,7 @@
     const data = JSON.parse(event.data);
     if (data.type === 'trade') {
       const price = data.data[0].p;
-      document.getElementById('curr_price').innerText = price.toFixed(2);
+      document.getElementById().innerText = price.toFixed(2);
     }
   });
 
