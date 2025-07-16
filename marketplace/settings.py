@@ -76,6 +76,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'marketplace.wsgi.application'
+ASGI_APPLICATION = 'marketplace.asgi.application'
+
 
 
 # Database
@@ -124,6 +126,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATICFILES_DIRS = [BASE_DIR / 'static']  # if you keep static files in a 'static/' folder
+STATIC_ROOT = BASE_DIR / 'staticfiles'    # for collectstatic in production
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
