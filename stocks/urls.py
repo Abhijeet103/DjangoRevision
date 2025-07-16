@@ -18,13 +18,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from django.urls import path
-from .views import index, getData ,  stocks , loginView , logoutView , register ,  buy , sell
+from .views import index,  stocks , loginView , logoutView , register ,  buy , sell
 
 
 urlpatterns = [
     path('',  index, name  = 'index'),
     path('stocks/' ,stocks , name  = 'stocks') ,
-    path('data/',getData , name = 'data'  ),
     path('login/' , loginView , name  = 'login') ,
     path('logout/' ,  logoutView , name = 'logout') ,
     path('register/'  , register ,  name = 'register'),

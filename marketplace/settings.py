@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 
 from django.urls import reverse
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,7 +28,7 @@ SECRET_KEY = 'django-insecure-2pn&tr#rqk%yw=sxa7(8nuff@n=9_83pie@n7r(d_3lkz1!vlz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -40,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'stocks' ,
+    'django_cron',
 ]
 
 
@@ -79,12 +81,12 @@ WSGI_APPLICATION = 'marketplace.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
@@ -141,6 +143,19 @@ EMAIL_HOST_USER = "devtestapi209@gmail.com"
 #App password
 EMAIL_HOST_PASSWORD = "ichxgmhygwgeafsp"
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+
+
+CRON_CLASSES = [
+    "stocks.cron.StockUpdateCronJob",
+]
+
+
+DATABASES = {
+    'default': dj_database_url.parse(
+        'postgresql://postgres.imwdiuygkwdieteuskbw:Abhijeet@178@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres',
+    )
+}
 
 
 

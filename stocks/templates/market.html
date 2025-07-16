@@ -1,4 +1,4 @@
-{% load static %}
+'{% load static %}'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -100,7 +100,6 @@
         }
 
 
-        ws.send(JSON.stringify({ type: 'subscribe', symbol: 'BINANCE:BTCUSDT' }));
     });
 
     ws.addEventListener('message', (event) => {
@@ -117,10 +116,10 @@
                     priceElem.innerHTML = `$ ${price}`;
                 }
 
-                const realtimePrice =  document.getElementById('real_time_buy_price')
-                realtimePrice.value  =  {price} ;
-                  const realtimePrice =  document.getElementById('real_time_sell_price')
-                realtimePrice.value  =  {price} ;
+                const realtimebuyPrice =  document.getElementById('real_time_buy_price')
+                realtimebuyPrice.value  =  {price} ;
+                  const realtimesellPrice =  document.getElementById('real_time_sell_price')
+                realtimesellPrice.value  =  {price} ;
 
                 console.log('Received:', { price, ticker });
             }
